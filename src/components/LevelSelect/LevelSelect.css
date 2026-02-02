@@ -1,0 +1,162 @@
+.level-select {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%);
+  overflow: auto;
+}
+
+.level-select-content {
+  max-width: 800px;
+  padding: 40px;
+  text-align: center;
+}
+
+.level-select-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #00d4ff;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.level-select-subtitle {
+  color: #8888aa;
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.level-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: #16213e;
+  border: 2px solid #333;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  touch-action: manipulation;
+  color: white;
+}
+
+.level-card:hover {
+  transform: translateY(-4px);
+  border-color: #6366f1;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+}
+
+.level-card:focus-visible {
+  outline: 2px solid #63b3ed;
+  outline-offset: 2px;
+}
+
+.level-card.completed {
+  border-color: #2f855a;
+}
+
+.level-card.completed:hover {
+  border-color: #38a169;
+  box-shadow: 0 8px 24px rgba(56, 161, 105, 0.2);
+}
+
+.level-card.editor-card {
+  border-style: dashed;
+  border-color: #4a5568;
+}
+
+.level-card.editor-card:hover {
+  border-color: #00d4ff;
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.2);
+}
+
+.level-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #6366f1;
+  margin-bottom: 8px;
+}
+
+.editor-card .level-number {
+  color: #00d4ff;
+}
+
+.level-name {
+  font-size: 0.9rem;
+  color: #eee;
+}
+
+.level-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 1rem;
+  color: #38a169;
+}
+
+.controls-reference {
+  background: #16213e;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: left;
+}
+
+.controls-reference h2 {
+  font-size: 1rem;
+  color: #8888aa;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.control-item kbd {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: #eee;
+}
+
+@media (max-width: 600px) {
+  .level-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-card {
+    transition: none;
+  }
+}

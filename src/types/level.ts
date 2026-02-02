@@ -24,8 +24,8 @@ export interface PlayerState {
 }
 
 export const TILE_SIZE = 40;
-export const GRID_WIDTH = 20;
-export const GRID_HEIGHT = 12;
+export const GRID_WIDTH = 30;
+export const GRID_HEIGHT = 20;
 
 export function createEmptyLevel(): Level {
   const tiles: TileType[][] = [];

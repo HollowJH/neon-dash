@@ -166,6 +166,8 @@ export function GameCanvas({ level, onExit }: GameCanvasProps) {
         tabIndex={0}
         width={GRID_WIDTH * TILE_SIZE}
         height={GRID_HEIGHT * TILE_SIZE}
+        role="application"
+        aria-label="Game playfield - use WASD or arrow keys to move, space to jump"
       />
 
       {gameState === 'won' && (

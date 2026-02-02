@@ -72,6 +72,8 @@ export function EditorCanvas({ level, selectedTile, onSetTile }: EditorCanvasPro
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
       onContextMenu={handleContextMenu}
+      role="img"
+      aria-label="Level editor grid - click and drag to place tiles"
     />
   );
 }

@@ -17,6 +17,7 @@ import {
 } from '../../game/particles';
 import { CORE_COLORS, GLOW_COLORS, drawWithGlow } from '../../utils/colors';
 import { soundManager } from '../../audio/SoundManager';
+import { TouchControls } from './TouchControls';
 import './GameCanvas.css';
 
 interface ViewportPadding {
@@ -290,6 +291,14 @@ export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitB
     setGameState('playing');
   };
 
+  // Handle touch input from TouchControls
+  const handleTouchInput = useCallback((input: Partial<InputState>) => {
+    // Initialize audio on first touch
+    soundManager.init();
+
+    Object.assign(inputRef.current, input);
+  }, []);
+
   return (
     <div className="game-layout">
       <div className="canvas-wrapper">
@@ -349,6 +358,8 @@ export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitB
           </ul>
         </div>
       </div>
+
+      <TouchControls onInputChange={handleTouchInput} />
     </div>
   );
 }

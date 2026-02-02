@@ -1,0 +1,131 @@
+/* Touch controls - only shown on touch devices */
+.touch-controls {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Show only on touch devices */
+@media (pointer: coarse) {
+  .touch-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
+.touch-left,
+.touch-right {
+  display: flex;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.touch-right {
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.touch-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(0, 212, 255, 0.4);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+  font-family: system-ui, -apple-system, sans-serif;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s, transform 0.1s;
+}
+
+.touch-btn:active {
+  background: rgba(0, 212, 255, 0.25);
+  border-color: #00d4ff;
+  transform: scale(0.95);
+}
+
+/* Direction buttons */
+.touch-left-btn,
+.touch-right-btn {
+  width: 64px;
+  height: 64px;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Jump button - largest, most important */
+.touch-jump-btn {
+  width: 80px;
+  height: 80px;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+/* Dash button - smaller, secondary */
+.touch-dash-btn {
+  width: 56px;
+  height: 56px;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* Smaller screens - compact layout */
+@media (max-width: 480px) {
+  .touch-controls {
+    padding: 12px;
+  }
+
+  .touch-left,
+  .touch-right {
+    gap: 8px;
+  }
+
+  .touch-left-btn,
+  .touch-right-btn {
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+  }
+
+  .touch-jump-btn {
+    width: 70px;
+    height: 70px;
+    font-size: 11px;
+  }
+
+  .touch-dash-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 9px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .touch-left-btn,
+  .touch-right-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+
+  .touch-jump-btn {
+    width: 60px;
+    height: 60px;
+  }
+
+  .touch-dash-btn {
+    width: 44px;
+    height: 44px;
+  }
+}

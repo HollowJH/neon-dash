@@ -26,6 +26,11 @@
   border-radius: 4px;
 }
 
+.game-canvas:focus-visible {
+  outline: 2px solid #63b3ed;
+  outline-offset: 2px;
+}
+
 .game-overlay {
   position: absolute;
   top: 0;
@@ -71,6 +76,12 @@
   background: #2d3748;
   color: #eee;
   transition: background 0.15s;
+  touch-action: manipulation;
+}
+
+.overlay-buttons button:focus-visible {
+  outline: 2px solid #63b3ed;
+  outline-offset: 2px;
 }
 
 .overlay-buttons button:hover {
@@ -83,4 +94,10 @@
 
 .overlay-buttons button:first-child:hover {
   background: #2f855a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay-buttons button {
+    transition: none;
+  }
 }

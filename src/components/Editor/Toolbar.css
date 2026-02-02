@@ -20,7 +20,13 @@
   cursor: pointer;
   background: #2d3748;
   color: #eee;
-  transition: all 0.15s;
+  transition: background-color 0.15s;
+  touch-action: manipulation;
+}
+
+.toolbar button:focus-visible {
+  outline: 2px solid #63b3ed;
+  outline-offset: 2px;
 }
 
 .toolbar button:hover:not(:disabled) {
@@ -51,4 +57,10 @@
 
 .mode-toggle.playing:hover {
   background: #b7791f !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toolbar button {
+    transition: none;
+  }
 }

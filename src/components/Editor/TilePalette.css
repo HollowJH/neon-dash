@@ -30,7 +30,13 @@
   cursor: pointer;
   color: #eee;
   font-size: 14px;
-  transition: all 0.15s;
+  transition: background-color 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+}
+
+.tile-option:focus-visible {
+  outline: 2px solid #63b3ed;
+  outline-offset: 2px;
 }
 
 .tile-option:hover {
@@ -47,4 +53,10 @@
   height: 24px;
   background: var(--tile-color);
   border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile-option {
+    transition: none;
+  }
 }

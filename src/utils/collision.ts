@@ -80,9 +80,9 @@ export function resolveCollisions(
   // Check tile collisions
   // Get tiles player might be overlapping
   const startTileX = Math.floor(newX / TILE_SIZE);
-  const endTileX = Math.floor((newX + PLAYER.WIDTH - 1) / TILE_SIZE);
+  const endTileX = Math.floor((newX + PLAYER.WIDTH - 0.01) / TILE_SIZE);
   const startTileY = Math.floor(newY / TILE_SIZE);
-  const endTileY = Math.floor((newY + PLAYER.HEIGHT - 1) / TILE_SIZE);
+  const endTileY = Math.floor((newY + PLAYER.HEIGHT - 0.01) / TILE_SIZE);
 
   for (let tileY = startTileY; tileY <= endTileY; tileY++) {
     for (let tileX = startTileX; tileX <= endTileX; tileX++) {
@@ -112,25 +112,26 @@ export function resolveCollisions(
         if (aabbCollision(getPlayerBounds(newX, newY), tileBounds)) {
           // Determine collision direction based on previous position
           const prevBounds = getPlayerBounds(x, y);
+          const tolerance = 4;
 
           // Moving down, hit top of tile
-          if (prevBounds.y + prevBounds.height <= tileBounds.y && velY > 0) {
+          if (prevBounds.y + prevBounds.height <= tileBounds.y + tolerance && velY > 0) {
             newY = tileBounds.y - PLAYER.HEIGHT;
             newVelY = 0;
             isGrounded = true;
           }
           // Moving up, hit bottom of tile
-          else if (prevBounds.y >= tileBounds.y + tileBounds.height && velY < 0) {
+          else if (prevBounds.y >= tileBounds.y + tileBounds.height - tolerance && velY < 0) {
             newY = tileBounds.y + tileBounds.height;
             newVelY = 0;
           }
           // Moving right, hit left side of tile
-          else if (prevBounds.x + prevBounds.width <= tileBounds.x && velX > 0) {
+          else if (prevBounds.x + prevBounds.width <= tileBounds.x + tolerance && velX > 0) {
             newX = tileBounds.x - PLAYER.WIDTH;
             newVelX = 0;
           }
           // Moving left, hit right side of tile
-          else if (prevBounds.x >= tileBounds.x + tileBounds.width && velX < 0) {
+          else if (prevBounds.x >= tileBounds.x + tileBounds.width - tolerance && velX < 0) {
             newX = tileBounds.x + tileBounds.width;
             newVelX = 0;
           }

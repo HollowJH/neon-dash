@@ -16,28 +16,21 @@ class SoundManager {
     try {
       this.ctx = new AudioContext();
       this.initialized = true;
+
+      // Resume immediately if suspended (must happen during user interaction)
+      if (this.ctx.state === 'suspended') {
+        this.ctx.resume().catch(() => {
+          console.warn('Failed to resume AudioContext');
+        });
+      }
     } catch {
       console.warn('Web Audio API not supported');
     }
   }
 
-  // Resume context if suspended (browsers suspend until user gesture)
-  private async ensureResumed(): Promise<boolean> {
-    if (!this.ctx) return false;
-
-    if (this.ctx.state === 'suspended') {
-      try {
-        await this.ctx.resume();
-      } catch {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  async play(sound: SoundType): Promise<void> {
+  play(sound: SoundType): void {
     if (!this.enabled || !this.ctx) return;
-    if (!(await this.ensureResumed())) return;
+    if (this.ctx.state !== 'running') return;
 
     switch (sound) {
       case 'jump':

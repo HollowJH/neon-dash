@@ -1,0 +1,86 @@
+.game-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.game-hud {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+  padding: 8px 16px;
+  background: #16213e;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.controls-hint {
+  color: #888;
+}
+
+.game-canvas {
+  border: 2px solid #333;
+  border-radius: 4px;
+}
+
+.game-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+}
+
+.overlay-content {
+  text-align: center;
+  padding: 32px 48px;
+  background: #16213e;
+  border-radius: 12px;
+}
+
+.overlay-content h2 {
+  margin-bottom: 16px;
+}
+
+.overlay-content.won h2 {
+  color: #d69e2e;
+}
+
+.overlay-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.overlay-buttons button {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #2d3748;
+  color: #eee;
+  transition: background 0.15s;
+}
+
+.overlay-buttons button:hover {
+  background: #4a5568;
+}
+
+.overlay-buttons button:first-child {
+  background: #38a169;
+}
+
+.overlay-buttons button:first-child:hover {
+  background: #2f855a;
+}

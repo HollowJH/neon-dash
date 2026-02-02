@@ -85,7 +85,7 @@ export class ParticleEmitter {
     config: Omit<ParticleConfig, 'x' | 'y'> & {
       spreadX?: number;
       spreadY?: number;
-      colors?: string[];
+      colors?: readonly string[];
     }
   ): void {
     const { spreadX = 100, spreadY = 100, colors, ...rest } = config;

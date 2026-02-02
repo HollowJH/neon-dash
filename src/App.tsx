@@ -5,7 +5,7 @@ import { TilePalette } from './components/Editor/TilePalette';
 import { Toolbar } from './components/Editor/Toolbar';
 import { GameCanvas } from './components/Game/GameCanvas';
 import { LevelSelect } from './components/LevelSelect/LevelSelect';
-import { DemoLevel } from './data/demoLevels';
+import type { DemoLevel } from './data/demoLevels';
 import { saveLevel, loadLevel, hasSpawnPoint } from './utils/storage';
 import './App.css';
 

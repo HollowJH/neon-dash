@@ -1,4 +1,5 @@
-import { DEMO_LEVELS, DemoLevel } from '../../data/demoLevels';
+import { DEMO_LEVELS } from '../../data/demoLevels';
+import type { DemoLevel } from '../../data/demoLevels';
 import './LevelSelect.css';
 
 interface LevelSelectProps {

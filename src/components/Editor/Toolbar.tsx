@@ -8,9 +8,22 @@ interface ToolbarProps {
   onSave: () => void;
   onLoad: () => void;
   canPlay: boolean;
+  gridWidth: number;
+  gridHeight: number;
+  onGridSizeChange: (width: number, height: number) => void;
 }
 
-export function Toolbar({ mode, onToggleMode, onClear, onSave, onLoad, canPlay }: ToolbarProps) {
+export function Toolbar({
+  mode,
+  onToggleMode,
+  onClear,
+  onSave,
+  onLoad,
+  canPlay,
+  gridWidth,
+  gridHeight,
+  onGridSizeChange
+}: ToolbarProps) {
   return (
     <div className="toolbar">
       <div className="toolbar-group">
@@ -27,6 +40,33 @@ export function Toolbar({ mode, onToggleMode, onClear, onSave, onLoad, canPlay }
           {mode === 'edit' ? '▶ Play' : '✏ Edit'}
         </button>
       </div>
+
+      {mode === 'edit' && (
+        <div className="toolbar-group grid-controls">
+          <label>
+            <span>Width:</span>
+            <input
+              type="number"
+              min={10}
+              max={50}
+              value={gridWidth}
+              onChange={(e) => onGridSizeChange(Number(e.target.value), gridHeight)}
+              aria-label="Grid width"
+            />
+          </label>
+          <label>
+            <span>Height:</span>
+            <input
+              type="number"
+              min={8}
+              max={30}
+              value={gridHeight}
+              onChange={(e) => onGridSizeChange(gridWidth, Number(e.target.value))}
+              aria-label="Grid height"
+            />
+          </label>
+        </div>
+      )}
 
       <div className="toolbar-group">
         <button onClick={onSave} disabled={mode === 'play'} aria-label="Save level">

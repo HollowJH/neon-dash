@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback, useState } from 'react';
 import type { Level, TileType } from '../../types/level';
-import { TILE_SIZE, GRID_WIDTH, GRID_HEIGHT } from '../../types/level';
 import { renderLevel, screenToGrid } from '../../utils/rendering';
+import { useResponsiveTileSize } from '../../hooks/useResponsiveTileSize';
 import './EditorCanvas.css';
 
 interface EditorCanvasProps {
@@ -14,7 +14,13 @@ export function EditorCanvas({ level, selectedTile, onSetTile }: EditorCanvasPro
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
 
-  // Render level whenever it changes
+  const tileSize = useResponsiveTileSize(
+    level.width,
+    level.height,
+    { top: 100, right: 100, bottom: 100, left: 300 }
+  );
+
+  // Render level whenever it changes or tile size changes
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -22,8 +28,8 @@ export function EditorCanvas({ level, selectedTile, onSetTile }: EditorCanvasPro
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    renderLevel(ctx, level, true);
-  }, [level]);
+    renderLevel(ctx, level, true, tileSize);
+  }, [level, tileSize]);
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     const canvas = canvasRef.current;
@@ -33,12 +39,12 @@ export function EditorCanvas({ level, selectedTile, onSetTile }: EditorCanvasPro
     canvas.setPointerCapture(e.pointerId);
 
     const rect = canvas.getBoundingClientRect();
-    const { x, y } = screenToGrid(e.clientX, e.clientY, rect);
+    const { x, y } = screenToGrid(e.clientX, e.clientY, rect, tileSize);
 
     // Right click = erase
     const tileToPlace = e.button === 2 ? 'empty' : selectedTile;
     onSetTile(x, y, tileToPlace);
-  }, [selectedTile, onSetTile]);
+  }, [selectedTile, onSetTile, tileSize]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (!isDrawing) return;
@@ -47,11 +53,11 @@ export function EditorCanvas({ level, selectedTile, onSetTile }: EditorCanvasPro
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const { x, y } = screenToGrid(e.clientX, e.clientY, rect);
+    const { x, y } = screenToGrid(e.clientX, e.clientY, rect, tileSize);
 
     const tileToPlace = e.buttons === 2 ? 'empty' : selectedTile;
     onSetTile(x, y, tileToPlace);
-  }, [isDrawing, selectedTile, onSetTile]);
+  }, [isDrawing, selectedTile, onSetTile, tileSize]);
 
   const handlePointerUp = useCallback(() => {
     setIsDrawing(false);
@@ -65,8 +71,8 @@ export function EditorCanvas({ level, selectedTile, onSetTile }: EditorCanvasPro
     <canvas
       ref={canvasRef}
       className="editor-canvas"
-      width={GRID_WIDTH * TILE_SIZE}
-      height={GRID_HEIGHT * TILE_SIZE}
+      width={level.width * tileSize}
+      height={level.height * tileSize}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}

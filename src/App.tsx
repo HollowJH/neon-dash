@@ -17,6 +17,9 @@ function App() {
     toggleMode,
     setTile,
     clearLevel,
+    gridWidth,
+    gridHeight,
+    onGridSizeChange,
   } = useEditorState();
 
   const handleSave = () => {
@@ -31,6 +34,8 @@ function App() {
     const loaded = loadLevel();
     if (loaded) {
       setLevel(loaded);
+      // Update grid size state to match loaded level
+      onGridSizeChange(loaded.width, loaded.height);
       alert('Level loaded!');
     } else {
       alert('No saved level found');
@@ -54,6 +59,9 @@ function App() {
           onSave={handleSave}
           onLoad={handleLoad}
           canPlay={canPlay}
+          gridWidth={gridWidth}
+          gridHeight={gridHeight}
+          onGridSizeChange={onGridSizeChange}
         />
       </header>
 

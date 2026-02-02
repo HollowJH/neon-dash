@@ -1,5 +1,4 @@
 import type { Level, PlayerState } from '../types/level';
-import { TILE_SIZE } from '../types/level';
 import { PHYSICS, PLAYER } from '../utils/physics';
 import { resolveCollisions } from '../utils/collision';
 import { findSpawnPoint } from '../utils/storage';
@@ -15,17 +14,19 @@ export interface InputState {
 export class PlayerController {
   public state: PlayerState;
   private level: Level;
+  private tileSize: number;
   private jumpHeld: boolean = false;
 
-  constructor(level: Level) {
+  constructor(level: Level, tileSize: number) {
     this.level = level;
+    this.tileSize = tileSize;
     this.state = this.createInitialState();
   }
 
   private createInitialState(): PlayerState {
     const spawn = findSpawnPoint(this.level);
-    const spawnX = spawn ? spawn.x * TILE_SIZE + (TILE_SIZE - PLAYER.WIDTH) / 2 : 100;
-    const spawnY = spawn ? spawn.y * TILE_SIZE + (TILE_SIZE - PLAYER.HEIGHT) : 100;
+    const spawnX = spawn ? spawn.x * this.tileSize + (this.tileSize - PLAYER.WIDTH) / 2 : 100;
+    const spawnY = spawn ? spawn.y * this.tileSize + (this.tileSize - PLAYER.HEIGHT) : 100;
 
     return {
       position: { x: spawnX, y: spawnY },
@@ -101,7 +102,8 @@ export class PlayerController {
       position.x,
       position.y,
       velocity.x,
-      velocity.y
+      velocity.y,
+      this.tileSize
     );
 
     // Update state from collision result

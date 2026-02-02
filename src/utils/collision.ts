@@ -1,5 +1,4 @@
 import type { Level } from '../types/level';
-import { TILE_SIZE } from '../types/level';
 import { PLAYER } from './physics';
 
 export interface AABB {
@@ -18,12 +17,12 @@ export function getPlayerBounds(x: number, y: number): AABB {
   };
 }
 
-export function getTileBounds(tileX: number, tileY: number): AABB {
+export function getTileBounds(tileX: number, tileY: number, tileSize: number): AABB {
   return {
-    x: tileX * TILE_SIZE,
-    y: tileY * TILE_SIZE,
-    width: TILE_SIZE,
-    height: TILE_SIZE,
+    x: tileX * tileSize,
+    y: tileY * tileSize,
+    width: tileSize,
+    height: tileSize,
   };
 }
 
@@ -52,7 +51,8 @@ export function resolveCollisions(
   x: number,
   y: number,
   velX: number,
-  velY: number
+  velY: number,
+  tileSize: number
 ): CollisionResult {
   let newX = x + velX;
   let newY = y + velY;
@@ -67,22 +67,22 @@ export function resolveCollisions(
     newX = 0;
     newVelX = 0;
   }
-  if (newX + PLAYER.WIDTH > level.width * TILE_SIZE) {
-    newX = level.width * TILE_SIZE - PLAYER.WIDTH;
+  if (newX + PLAYER.WIDTH > level.width * tileSize) {
+    newX = level.width * tileSize - PLAYER.WIDTH;
     newVelX = 0;
   }
 
   // Fall off bottom = death
-  if (newY > level.height * TILE_SIZE) {
+  if (newY > level.height * tileSize) {
     hitHazard = true;
   }
 
   // Check tile collisions
   // Get tiles player might be overlapping
-  const startTileX = Math.floor(newX / TILE_SIZE);
-  const endTileX = Math.floor((newX + PLAYER.WIDTH - 0.01) / TILE_SIZE);
-  const startTileY = Math.floor(newY / TILE_SIZE);
-  const endTileY = Math.floor((newY + PLAYER.HEIGHT - 0.01) / TILE_SIZE);
+  const startTileX = Math.floor(newX / tileSize);
+  const endTileX = Math.floor((newX + PLAYER.WIDTH - 0.01) / tileSize);
+  const startTileY = Math.floor(newY / tileSize);
+  const endTileY = Math.floor((newY + PLAYER.HEIGHT - 0.01) / tileSize);
 
   for (let tileY = startTileY; tileY <= endTileY; tileY++) {
     for (let tileX = startTileX; tileX <= endTileX; tileX++) {
@@ -93,21 +93,21 @@ export function resolveCollisions(
       const tileType = level.tiles[tileY][tileX];
 
       if (tileType === 'hazard') {
-        const tileBounds = getTileBounds(tileX, tileY);
+        const tileBounds = getTileBounds(tileX, tileY, tileSize);
         if (aabbCollision(getPlayerBounds(newX, newY), tileBounds)) {
           hitHazard = true;
         }
       }
 
       if (tileType === 'goal') {
-        const tileBounds = getTileBounds(tileX, tileY);
+        const tileBounds = getTileBounds(tileX, tileY, tileSize);
         if (aabbCollision(getPlayerBounds(newX, newY), tileBounds)) {
           reachedGoal = true;
         }
       }
 
       if (tileType === 'platform') {
-        const tileBounds = getTileBounds(tileX, tileY);
+        const tileBounds = getTileBounds(tileX, tileY, tileSize);
 
         if (aabbCollision(getPlayerBounds(newX, newY), tileBounds)) {
           // Determine collision direction based on previous position
@@ -142,12 +142,12 @@ export function resolveCollisions(
 
   // Additional ground check for small gaps
   const groundCheckY = newY + PLAYER.HEIGHT + 1;
-  const groundTileY = Math.floor(groundCheckY / TILE_SIZE);
+  const groundTileY = Math.floor(groundCheckY / tileSize);
   for (let tileX = startTileX; tileX <= endTileX; tileX++) {
     if (groundTileY >= 0 && groundTileY < level.height &&
         tileX >= 0 && tileX < level.width &&
         level.tiles[groundTileY][tileX] === 'platform') {
-      const tileBounds = getTileBounds(tileX, groundTileY);
+      const tileBounds = getTileBounds(tileX, groundTileY, tileSize);
       if (newX + PLAYER.WIDTH > tileBounds.x && newX < tileBounds.x + tileBounds.width) {
         if (Math.abs(newY + PLAYER.HEIGHT - tileBounds.y) < 2) {
           isGrounded = true;

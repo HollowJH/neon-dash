@@ -1,11 +1,11 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import type { Level } from '../../types/level';
-import { TILE_SIZE, GRID_WIDTH, GRID_HEIGHT } from '../../types/level';
 import { renderLevel } from '../../utils/rendering';
 import { PLAYER } from '../../utils/physics';
 import { PlayerController } from '../../game/PlayerController';
 import type { InputState } from '../../game/PlayerController';
 import { useGameLoop } from '../../hooks/useGameLoop';
+import { useResponsiveTileSize } from '../../hooks/useResponsiveTileSize';
 import './GameCanvas.css';
 
 interface GameCanvasProps {
@@ -27,10 +27,16 @@ export function GameCanvas({ level, onExit }: GameCanvasProps) {
   const [gameState, setGameState] = useState<'playing' | 'dead' | 'won'>('playing');
   const [deathCount, setDeathCount] = useState(0);
 
+  const tileSize = useResponsiveTileSize(
+    level.width,
+    level.height,
+    { top: 100, right: 100, bottom: 100, left: 300 }
+  );
+
   // Initialize controller
   useEffect(() => {
-    controllerRef.current = new PlayerController(level);
-  }, [level]);
+    controllerRef.current = new PlayerController(level, tileSize);
+  }, [level, tileSize]);
 
   // Auto-focus canvas on mount
   useEffect(() => {
@@ -126,7 +132,7 @@ export function GameCanvas({ level, onExit }: GameCanvasProps) {
     }
 
     // Render
-    renderLevel(ctx, level, false);
+    renderLevel(ctx, level, false, tileSize);
 
     // Draw player
     const { position } = controller.state;
@@ -144,7 +150,7 @@ export function GameCanvas({ level, onExit }: GameCanvasProps) {
       ctx.fillStyle = 'rgba(229, 62, 62, 0.3)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
-  }, [level, gameState]);
+  }, [level, gameState, tileSize]);
 
   useGameLoop(gameLoop, true);
 
@@ -164,8 +170,8 @@ export function GameCanvas({ level, onExit }: GameCanvasProps) {
         ref={canvasRef}
         className="game-canvas"
         tabIndex={0}
-        width={GRID_WIDTH * TILE_SIZE}
-        height={GRID_HEIGHT * TILE_SIZE}
+        width={level.width * tileSize}
+        height={level.height * tileSize}
         role="application"
         aria-label="Game playfield - use WASD or arrow keys to move, space to jump"
       />

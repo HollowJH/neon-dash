@@ -23,17 +23,16 @@ export interface PlayerState {
   jumpBufferTimer: number;
 }
 
-export const TILE_SIZE = 40;
 export const GRID_WIDTH = 30;
 export const GRID_HEIGHT = 20;
 
-export function createEmptyLevel(): Level {
+export function createEmptyLevel(width: number = GRID_WIDTH, height: number = GRID_HEIGHT): Level {
   const tiles: TileType[][] = [];
-  for (let y = 0; y < GRID_HEIGHT; y++) {
+  for (let y = 0; y < height; y++) {
     tiles[y] = [];
-    for (let x = 0; x < GRID_WIDTH; x++) {
+    for (let x = 0; x < width; x++) {
       tiles[y][x] = 'empty';
     }
   }
-  return { width: GRID_WIDTH, height: GRID_HEIGHT, tiles };
+  return { width, height, tiles };
 }

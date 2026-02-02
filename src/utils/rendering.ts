@@ -1,5 +1,4 @@
 import type { TileType, Level } from '../types/level';
-import { TILE_SIZE } from '../types/level';
 
 export const TILE_COLORS: Record<TileType, string> = {
   empty: '#1a1a2e',
@@ -12,13 +11,14 @@ export const TILE_COLORS: Record<TileType, string> = {
 export function renderLevel(
   ctx: CanvasRenderingContext2D,
   level: Level,
-  showGrid: boolean = true
+  showGrid: boolean = true,
+  tileSize: number = 40
 ) {
   const { width, height, tiles } = level;
 
   // Clear canvas
   ctx.fillStyle = '#1a1a2e';
-  ctx.fillRect(0, 0, width * TILE_SIZE, height * TILE_SIZE);
+  ctx.fillRect(0, 0, width * tileSize, height * tileSize);
 
   // Draw tiles
   for (let y = 0; y < height; y++) {
@@ -26,12 +26,12 @@ export function renderLevel(
       const tileType = tiles[y][x];
       if (tileType !== 'empty') {
         ctx.fillStyle = TILE_COLORS[tileType];
-        ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
 
         // Add slight border for depth
         ctx.strokeStyle = 'rgba(0,0,0,0.3)';
         ctx.lineWidth = 1;
-        ctx.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        ctx.strokeRect(x * tileSize, y * tileSize, tileSize, tileSize);
       }
     }
   }
@@ -43,22 +43,27 @@ export function renderLevel(
 
     for (let x = 0; x <= width; x++) {
       ctx.beginPath();
-      ctx.moveTo(x * TILE_SIZE, 0);
-      ctx.lineTo(x * TILE_SIZE, height * TILE_SIZE);
+      ctx.moveTo(x * tileSize, 0);
+      ctx.lineTo(x * tileSize, height * tileSize);
       ctx.stroke();
     }
 
     for (let y = 0; y <= height; y++) {
       ctx.beginPath();
-      ctx.moveTo(0, y * TILE_SIZE);
-      ctx.lineTo(width * TILE_SIZE, y * TILE_SIZE);
+      ctx.moveTo(0, y * tileSize);
+      ctx.lineTo(width * tileSize, y * tileSize);
       ctx.stroke();
     }
   }
 }
 
-export function screenToGrid(screenX: number, screenY: number, canvasRect: DOMRect): { x: number; y: number } {
-  const x = Math.floor((screenX - canvasRect.left) / TILE_SIZE);
-  const y = Math.floor((screenY - canvasRect.top) / TILE_SIZE);
+export function screenToGrid(
+  screenX: number,
+  screenY: number,
+  canvasRect: DOMRect,
+  tileSize: number = 40
+): { x: number; y: number } {
+  const x = Math.floor((screenX - canvasRect.left) / tileSize);
+  const y = Math.floor((screenY - canvasRect.top) / tileSize);
   return { x, y };
 }

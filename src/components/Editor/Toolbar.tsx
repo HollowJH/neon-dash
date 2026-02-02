@@ -16,7 +16,10 @@ export function Toolbar({ mode, onToggleMode, onClear, onSave, onLoad, canPlay }
       <div className="toolbar-group">
         <button
           className={`mode-toggle ${mode === 'play' ? 'playing' : ''}`}
-          onClick={onToggleMode}
+          onClick={(e) => {
+            onToggleMode();
+            e.currentTarget.blur();
+          }}
           disabled={mode === 'edit' && !canPlay}
           title={!canPlay ? 'Add a spawn point to play' : undefined}
         >

@@ -32,6 +32,14 @@ export function GameCanvas({ level, onExit }: GameCanvasProps) {
     controllerRef.current = new PlayerController(level);
   }, [level]);
 
+  // Auto-focus canvas on mount
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.focus();
+    }
+  }, []);
+
   // Handle keyboard input
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -155,6 +163,7 @@ export function GameCanvas({ level, onExit }: GameCanvasProps) {
       <canvas
         ref={canvasRef}
         className="game-canvas"
+        tabIndex={0}
         width={GRID_WIDTH * TILE_SIZE}
         height={GRID_HEIGHT * TILE_SIZE}
       />

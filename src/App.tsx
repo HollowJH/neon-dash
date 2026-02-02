@@ -2,6 +2,7 @@ import { useEditorState } from './hooks/useEditorState';
 import { EditorCanvas } from './components/Editor/EditorCanvas';
 import { TilePalette } from './components/Editor/TilePalette';
 import { Toolbar } from './components/Editor/Toolbar';
+import { GameCanvas } from './components/Game/GameCanvas';
 import { saveLevel, loadLevel, hasSpawnPoint } from './utils/storage';
 import './App.css';
 
@@ -12,6 +13,7 @@ function App() {
     selectedTile,
     setSelectedTile,
     mode,
+    setMode,
     toggleMode,
     setTile,
     clearLevel,
@@ -33,6 +35,10 @@ function App() {
     } else {
       alert('No saved level found');
     }
+  };
+
+  const handleExitPlay = () => {
+    setMode('edit');
   };
 
   const canPlay = hasSpawnPoint(level);
@@ -69,10 +75,10 @@ function App() {
               onSetTile={setTile}
             />
           ) : (
-            <div className="play-placeholder">
-              <p>Play Mode (coming next...)</p>
-              <button onClick={toggleMode}>Back to Edit</button>
-            </div>
+            <GameCanvas
+              level={level}
+              onExit={handleExitPlay}
+            />
           )}
         </div>
       </main>

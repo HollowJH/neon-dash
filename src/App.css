@@ -12,4 +12,58 @@
   background: #1a1a2e;
   color: #eee;
   font-family: system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #0f0f1a;
+  border-bottom: 1px solid #333;
+}
+
+.app-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  padding: 24px;
+  gap: 24px;
+  overflow: hidden;
+}
+
+.sidebar {
+  flex-shrink: 0;
+}
+
+.canvas-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px;
+  background: #16213e;
+  border-radius: 8px;
+}
+
+.play-placeholder button {
+  padding: 10px 20px;
+  font-size: 14px;
+  background: #2d3748;
+  color: #eee;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }

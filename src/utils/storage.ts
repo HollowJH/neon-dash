@@ -1,4 +1,4 @@
-import { Level, createEmptyLevel } from '../types/level';
+import type { Level } from '../types/level';
 
 const STORAGE_KEY = 'level-editor-save';
 

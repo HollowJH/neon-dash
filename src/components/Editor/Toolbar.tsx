@@ -1,4 +1,4 @@
-import { EditorMode } from '../../hooks/useEditorState';
+import type { EditorMode } from '../../hooks/useEditorState';
 import './Toolbar.css';
 
 interface ToolbarProps {

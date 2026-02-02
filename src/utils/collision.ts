@@ -1,4 +1,5 @@
-import { Level, TILE_SIZE } from '../types/level';
+import type { Level } from '../types/level';
+import { TILE_SIZE } from '../types/level';
 import { PLAYER } from './physics';
 
 export interface AABB {
@@ -77,8 +78,6 @@ export function resolveCollisions(
   }
 
   // Check tile collisions
-  const playerBounds = getPlayerBounds(newX, newY);
-
   // Get tiles player might be overlapping
   const startTileX = Math.floor(newX / TILE_SIZE);
   const endTileX = Math.floor((newX + PLAYER.WIDTH - 1) / TILE_SIZE);

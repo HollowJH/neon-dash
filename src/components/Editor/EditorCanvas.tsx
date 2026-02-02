@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback, useState } from 'react';
-import { Level, TileType, TILE_SIZE, GRID_WIDTH, GRID_HEIGHT } from '../../types/level';
+import type { Level, TileType } from '../../types/level';
+import { TILE_SIZE, GRID_WIDTH, GRID_HEIGHT } from '../../types/level';
 import { renderLevel, screenToGrid } from '../../utils/rendering';
 import './EditorCanvas.css';
 

@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
-import { TileType, Level, createEmptyLevel, GRID_WIDTH, GRID_HEIGHT } from '../types/level';
+import type { TileType, Level } from '../types/level';
+import { createEmptyLevel, GRID_WIDTH, GRID_HEIGHT } from '../types/level';
 
 export type EditorMode = 'edit' | 'play';
 

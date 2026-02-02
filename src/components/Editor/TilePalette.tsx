@@ -1,4 +1,4 @@
-import { TileType } from '../../types/level';
+import type { TileType } from '../../types/level';
 import './TilePalette.css';
 
 interface TilePaletteProps {

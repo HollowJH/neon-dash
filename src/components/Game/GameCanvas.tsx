@@ -1,8 +1,10 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { Level, TILE_SIZE, GRID_WIDTH, GRID_HEIGHT } from '../../types/level';
-import { renderLevel, TILE_COLORS } from '../../utils/rendering';
+import type { Level } from '../../types/level';
+import { TILE_SIZE, GRID_WIDTH, GRID_HEIGHT } from '../../types/level';
+import { renderLevel } from '../../utils/rendering';
 import { PLAYER } from '../../utils/physics';
-import { PlayerController, InputState } from '../../game/PlayerController';
+import { PlayerController } from '../../game/PlayerController';
+import type { InputState } from '../../game/PlayerController';
 import { useGameLoop } from '../../hooks/useGameLoop';
 import './GameCanvas.css';
 
@@ -13,7 +15,7 @@ interface GameCanvasProps {
 
 export function GameCanvas({ level, onExit }: GameCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const controllerRef = useRef<PlayerController>();
+  const controllerRef = useRef<PlayerController | null>(null);
   const inputRef = useRef<InputState>({
     left: false,
     right: false,

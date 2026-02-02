@@ -4,8 +4,8 @@ export function useGameLoop(
   callback: (deltaTime: number) => void,
   isRunning: boolean
 ) {
-  const requestRef = useRef<number>();
-  const previousTimeRef = useRef<number>();
+  const requestRef = useRef<number | null>(null);
+  const previousTimeRef = useRef<number | undefined>(undefined);
 
   const animate = useCallback((time: number) => {
     if (previousTimeRef.current !== undefined) {

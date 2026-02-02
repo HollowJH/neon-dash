@@ -1,4 +1,5 @@
-import { Level, TILE_SIZE, PlayerState } from '../types/level';
+import type { Level, PlayerState } from '../types/level';
+import { TILE_SIZE } from '../types/level';
 import { PHYSICS, PLAYER } from '../utils/physics';
 import { resolveCollisions } from '../utils/collision';
 import { findSpawnPoint } from '../utils/storage';

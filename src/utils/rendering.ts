@@ -1,4 +1,5 @@
-import { TileType, Level, TILE_SIZE } from '../types/level';
+import type { TileType, Level } from '../types/level';
+import { TILE_SIZE } from '../types/level';
 
 export const TILE_COLORS: Record<TileType, string> = {
   empty: '#1a1a2e',

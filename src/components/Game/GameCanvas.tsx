@@ -169,6 +169,7 @@ export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitB
     if (gameState === 'playing') {
       // Track previous state for effect triggers
       const wasGrounded = controller.state.isGrounded;
+      const wasOnWall = controller.isOnWall;
 
       // Update
       const result = controller.update(inputRef.current, deltaTime);
@@ -186,7 +187,7 @@ export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitB
         soundManager.play('land');
       }
 
-      if (inputRef.current.jumpPressed && (controller.state.isGrounded || controller.isOnWall)) {
+      if (inputRef.current.jumpPressed && (wasGrounded || wasOnWall)) {
         emitJumpParticles(
           controller.state.position.x + playerDims.WIDTH / 2,
           controller.state.position.y + playerDims.HEIGHT

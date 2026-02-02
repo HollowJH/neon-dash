@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import type { Level } from '../../types/level';
 import { renderLevel } from '../../utils/rendering';
-import { PLAYER } from '../../utils/physics';
+import { getPlayerDimensions } from '../../utils/physics';
 import { PlayerController } from '../../game/PlayerController';
 import type { InputState } from '../../game/PlayerController';
 import { useGameLoop } from '../../hooks/useGameLoop';
@@ -18,14 +18,25 @@ import {
 import { CORE_COLORS, GLOW_COLORS, drawWithGlow } from '../../utils/colors';
 import './GameCanvas.css';
 
+interface ViewportPadding {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
+
 interface GameCanvasProps {
   level: Level;
   onExit: () => void;
   onComplete?: () => void;
+  onNextLevel?: () => void;
   hint?: string;
+  exitButtonText?: string;
+  levelTitle?: string;
+  viewportPadding?: ViewportPadding;
 }
 
-export function GameCanvas({ level, onExit, onComplete, hint }: GameCanvasProps) {
+export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitButtonText = 'Exit to Menu', levelTitle, viewportPadding }: GameCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const controllerRef = useRef<PlayerController | null>(null);
   const inputRef = useRef<InputState>({
@@ -41,15 +52,18 @@ export function GameCanvas({ level, onExit, onComplete, hint }: GameCanvasProps)
   const [gameState, setGameState] = useState<'playing' | 'dead' | 'won'>('playing');
   const [deathCount, setDeathCount] = useState(0);
 
-  const tileSize = useResponsiveTileSize(
-    level.width,
-    level.height,
-    { top: 100, right: 100, bottom: 100, left: 300 }
-  );
+  const tileSize = useResponsiveTileSize(level.width, level.height, viewportPadding);
 
-  // Initialize controller
+  // Calculate player dimensions based on tile size
+  const playerDims = getPlayerDimensions(tileSize);
+
+  // Initialize controller and reset game state when level changes
   useEffect(() => {
     controllerRef.current = new PlayerController(level, tileSize);
+    setGameState('playing');
+    setDeathCount(0);
+    gameParticles.clear();
+    screenShake.reset();
   }, [level, tileSize]);
 
   // Auto-focus canvas on mount
@@ -159,8 +173,8 @@ export function GameCanvas({ level, onExit, onComplete, hint }: GameCanvasProps)
         // Landed - emit dust and shake
         const landingIntensity = Math.min(Math.abs(controller.state.velocity.y) / 500, 2);
         emitLandingDust(
-          controller.state.position.x + PLAYER.WIDTH / 2,
-          controller.state.position.y + PLAYER.HEIGHT,
+          controller.state.position.x + playerDims.WIDTH / 2,
+          controller.state.position.y + playerDims.HEIGHT,
           landingIntensity
         );
         screenShake.trigger(landingIntensity * 3);
@@ -168,15 +182,15 @@ export function GameCanvas({ level, onExit, onComplete, hint }: GameCanvasProps)
 
       if (inputRef.current.jumpPressed && (controller.state.isGrounded || controller.isOnWall)) {
         emitJumpParticles(
-          controller.state.position.x + PLAYER.WIDTH / 2,
-          controller.state.position.y + PLAYER.HEIGHT
+          controller.state.position.x + playerDims.WIDTH / 2,
+          controller.state.position.y + playerDims.HEIGHT
         );
       }
 
       if (controller.isDashing) {
         emitDashTrail(
-          controller.state.position.x + PLAYER.WIDTH / 2,
-          controller.state.position.y + PLAYER.HEIGHT / 2,
+          controller.state.position.x + playerDims.WIDTH / 2,
+          controller.state.position.y + playerDims.HEIGHT / 2,
           controller.dashDirection
         );
       }
@@ -188,8 +202,8 @@ export function GameCanvas({ level, onExit, onComplete, hint }: GameCanvasProps)
 
       if (result.hitHazard) {
         emitDeathExplosion(
-          controller.state.position.x + PLAYER.WIDTH / 2,
-          controller.state.position.y + PLAYER.HEIGHT / 2
+          controller.state.position.x + playerDims.WIDTH / 2,
+          controller.state.position.y + playerDims.HEIGHT / 2
         );
         screenShake.trigger(10);
         setGameState('dead');
@@ -232,14 +246,15 @@ export function GameCanvas({ level, onExit, onComplete, hint }: GameCanvasProps)
 
     drawWithGlow(ctx, () => {
       ctx.fillStyle = playerColor;
-      ctx.fillRect(position.x, position.y, PLAYER.WIDTH, PLAYER.HEIGHT);
+      ctx.fillRect(position.x, position.y, playerDims.WIDTH, playerDims.HEIGHT);
     }, playerGlow, controller.isDashing ? 15 : 8);
 
-    // Player face
+    // Player face (proportional to player size)
+    const faceScale = playerDims.WIDTH / 28; // Original width was 28
     ctx.fillStyle = CORE_COLORS.background;
-    ctx.fillRect(position.x + 6, position.y + 8, 6, 6);
-    ctx.fillRect(position.x + 16, position.y + 8, 6, 6);
-    ctx.fillRect(position.x + 8, position.y + 20, 12, 4);
+    ctx.fillRect(position.x + 6 * faceScale, position.y + 8 * faceScale, 6 * faceScale, 6 * faceScale);
+    ctx.fillRect(position.x + 16 * faceScale, position.y + 8 * faceScale, 6 * faceScale, 6 * faceScale);
+    ctx.fillRect(position.x + 8 * faceScale, position.y + 20 * faceScale, 12 * faceScale, 4 * faceScale);
 
     // Render particles
     gameParticles.render(ctx);
@@ -251,7 +266,7 @@ export function GameCanvas({ level, onExit, onComplete, hint }: GameCanvasProps)
       ctx.fillStyle = 'rgba(229, 62, 62, 0.3)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
-  }, [level, gameState, tileSize, onComplete, findGoalPosition]);
+  }, [level, gameState, tileSize, playerDims, onComplete, findGoalPosition]);
 
   useGameLoop(gameLoop, true);
 
@@ -263,43 +278,64 @@ export function GameCanvas({ level, onExit, onComplete, hint }: GameCanvasProps)
   };
 
   return (
-    <div className="game-container">
-      <div className="game-hud">
-        <div className="hud-stats">
-          <span>Deaths: {deathCount}</span>
-        </div>
-        {hint && (
-          <div className="level-hint">
-            <span>{hint}</span>
-          </div>
-        )}
-        <div className="controls-hint">
-          WASD/Arrows: move | Space: jump | Shift: dash | ESC: exit
-        </div>
-      </div>
+    <div className="game-layout">
+      <div className="canvas-wrapper">
+        <canvas
+          ref={canvasRef}
+          className="game-canvas"
+          tabIndex={0}
+          width={level.width * tileSize}
+          height={level.height * tileSize}
+          role="application"
+          aria-label="Game playfield - use WASD or arrow keys to move, space to jump"
+        />
 
-      <canvas
-        ref={canvasRef}
-        className="game-canvas"
-        tabIndex={0}
-        width={level.width * tileSize}
-        height={level.height * tileSize}
-        role="application"
-        aria-label="Game playfield - use WASD or arrow keys to move, space to jump"
-      />
-
-      {gameState === 'won' && (
-        <div className="game-overlay">
-          <div className="overlay-content won">
-            <h2>🎉 Level Complete!</h2>
-            <p>Deaths: {deathCount}</p>
-            <div className="overlay-buttons">
-              <button onClick={handleRestart} aria-label="Restart level">Play Again</button>
-              <button onClick={onExit} aria-label="Return to menu">Exit to Menu</button>
+        {gameState === 'won' && (
+          <div className="game-overlay">
+            <div className="overlay-content won">
+              <h2>🎉 Level Complete!</h2>
+              <p>Deaths: {deathCount}</p>
+              <div className="overlay-buttons">
+                <button onClick={handleRestart} aria-label="Restart level">Play Again</button>
+                {onNextLevel && (
+                  <button onClick={onNextLevel} className="primary" aria-label="Next level">Next Level</button>
+                )}
+                <button onClick={onExit} aria-label="Return to menu">{exitButtonText}</button>
+              </div>
             </div>
           </div>
+        )}
+      </div>
+
+      <div className="game-info-sidebar">
+        {levelTitle && (
+          <div className="info-section level-title">
+            <h2>{levelTitle}</h2>
+          </div>
+        )}
+
+        <div className="info-section">
+          <h3>Stats</h3>
+          <p>Deaths: {deathCount}</p>
         </div>
-      )}
+
+        {hint && (
+          <div className="info-section hint">
+            <h3>Hint</h3>
+            <p>{hint}</p>
+          </div>
+        )}
+
+        <div className="info-section controls">
+          <h3>Controls</h3>
+          <ul>
+            <li>WASD/Arrows: move</li>
+            <li>Space: jump</li>
+            <li>Shift: dash</li>
+            <li>ESC: exit</li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

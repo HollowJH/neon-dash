@@ -1,97 +1,284 @@
 .toolbar {
   display: flex;
-  gap: 16px;
-  padding: 12px 16px;
-  background: #16213e;
-  border-radius: 8px;
+  gap: 20px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #16213e 0%, #1a2744 100%);
+  border-radius: 12px;
+  border: 1px solid #2a3a5a;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .toolbar-group {
   display: flex;
-  gap: 8px;
+  gap: 10px;
+  align-items: center;
+}
+
+.toolbar-group:not(:last-child)::after {
+  content: '';
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(99, 102, 241, 0.3) 50%,
+    transparent 100%
+  );
+  margin-left: 20px;
 }
 
 .toolbar button {
-  padding: 10px 16px;
+  padding: 10px 18px;
   font-size: 14px;
   font-weight: 500;
-  border: none;
-  border-radius: 6px;
+  border: 1px solid #2a3a5a;
+  border-radius: 8px;
   cursor: pointer;
-  background: #2d3748;
+  background: rgba(255, 255, 255, 0.05);
   color: #eee;
-  transition: background-color 0.15s;
+  transition: all 0.2s ease;
   touch-action: manipulation;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
 }
 
-.toolbar button:focus-visible {
-  outline: 2px solid #63b3ed;
-  outline-offset: 2px;
+.toolbar button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  transition: left 0.3s ease;
+}
+
+.toolbar button:hover:not(:disabled)::before {
+  left: 100%;
 }
 
 .toolbar button:hover:not(:disabled) {
-  background: #4a5568;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #00d4ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+}
+
+.toolbar button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.toolbar button:focus-visible {
+  outline: 2px solid #00d4ff;
+  outline-offset: 2px;
 }
 
 .toolbar button:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+  border-color: #1a2a4a;
+}
+
+.toolbar button.danger {
+  border-color: rgba(197, 48, 48, 0.4);
 }
 
 .toolbar button.danger:hover:not(:disabled) {
-  background: #c53030;
+  background: rgba(197, 48, 48, 0.2);
+  border-color: #c53030;
+  box-shadow: 0 4px 12px rgba(197, 48, 48, 0.3);
 }
 
 .mode-toggle {
-  min-width: 100px;
-  background: #38a169 !important;
+  min-width: 110px;
+  background: linear-gradient(135deg, #00ff88 0%, #00d488 100%) !important;
+  color: #0a0a1a !important;
+  font-weight: 600;
+  border-color: #00ff88 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .mode-toggle:hover:not(:disabled) {
-  background: #2f855a !important;
+  background: linear-gradient(135deg, #00d488 0%, #00aa77 100%) !important;
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4) !important;
 }
 
 .mode-toggle.playing {
-  background: #d69e2e !important;
+  background: linear-gradient(135deg, #ffd700 0%, #d69e2e 100%) !important;
+  border-color: #ffd700 !important;
 }
 
 .mode-toggle.playing:hover {
-  background: #b7791f !important;
+  background: linear-gradient(135deg, #d69e2e 0%, #b7791f 100%) !important;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4) !important;
 }
 
 .grid-controls {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
 }
 
 .grid-controls label {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 13px;
+  font-weight: 500;
   color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Space Mono', monospace;
 }
 
 .grid-controls input[type="number"] {
-  width: 60px;
-  padding: 6px 8px;
-  background: #1a1a2e;
-  border: 1px solid #333;
-  border-radius: 4px;
-  color: #eee;
+  width: 65px;
+  padding: 8px 10px;
+  background: rgba(10, 10, 26, 0.6);
+  border: 1px solid #2a3a5a;
+  border-radius: 6px;
+  color: #00d4ff;
   font-size: 14px;
+  font-weight: 600;
+  font-family: 'Space Mono', monospace;
   text-align: center;
+  transition: all 0.2s ease;
+}
+
+.grid-controls input[type="number"]:hover {
+  border-color: #00d4ff;
+  background: rgba(0, 212, 255, 0.05);
+}
+
+.grid-controls input[type="number"]:focus {
+  outline: none;
+  border-color: #00d4ff;
+  background: rgba(0, 212, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
 }
 
 .grid-controls input[type="number"]:focus-visible {
-  outline: 2px solid #63b3ed;
+  outline: 2px solid #00d4ff;
   outline-offset: 2px;
-  border-color: #63b3ed;
+  border-color: #00d4ff;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .toolbar button {
+  .toolbar button,
+  .toolbar button::before,
+  .grid-controls input[type="number"] {
     transition: none;
   }
 }
+
+/* Responsive toolbar for tablets and mobile */
+@media (max-width: 1024px) {
+  .toolbar {
+    padding: 12px 16px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .toolbar button {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .mode-toggle {
+    min-width: 100px;
+  }
+
+  .grid-controls label {
+    font-size: 12px;
+  }
+
+  .grid-controls input[type="number"] {
+    width: 60px;
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+
+  .toolbar-group {
+    gap: 8px;
+  }
+
+  .toolbar-group:not(:last-child)::after {
+    display: none; /* Hide separators on mobile */
+  }
+
+  .toolbar button {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .mode-toggle {
+    min-width: 90px;
+  }
+
+  .grid-controls {
+    gap: 12px;
+  }
+
+  .grid-controls label {
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  .grid-controls input[type="number"] {
+    width: 55px;
+    padding: 6px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .toolbar {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .toolbar-group {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .toolbar button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .mode-toggle {
+    min-width: 80px;
+    font-size: 11px;
+  }
+
+  .grid-controls {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .grid-controls label {
+    font-size: 10px;
+    width: 100%;
+  }
+
+  .grid-controls input[type="number"] {
+    width: 50px;
+    padding: 5px;
+    font-size: 11px;
+  }
+}
+

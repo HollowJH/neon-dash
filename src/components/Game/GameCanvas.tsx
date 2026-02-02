@@ -174,8 +174,8 @@ export function GameCanvas({ level, onExit }: GameCanvasProps) {
             <h2>🎉 Level Complete!</h2>
             <p>Deaths: {deathCount}</p>
             <div className="overlay-buttons">
-              <button onClick={handleRestart}>Play Again</button>
-              <button onClick={onExit}>Edit Level</button>
+              <button onClick={handleRestart} aria-label="Restart level">Play Again</button>
+              <button onClick={onExit} aria-label="Return to level editor">Edit Level</button>
             </div>
           </div>
         </div>

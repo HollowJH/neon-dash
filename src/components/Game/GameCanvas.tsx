@@ -16,6 +16,7 @@ import {
   emitGoalSparkle
 } from '../../game/particles';
 import { CORE_COLORS, GLOW_COLORS, drawWithGlow } from '../../utils/colors';
+import { soundManager } from '../../audio/SoundManager';
 import './GameCanvas.css';
 
 interface ViewportPadding {
@@ -78,6 +79,9 @@ export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitB
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.repeat) return;
+
+      // Initialize audio on first interaction
+      soundManager.init();
 
       switch (e.code) {
         case 'ArrowLeft':
@@ -178,6 +182,7 @@ export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitB
           landingIntensity
         );
         screenShake.trigger(landingIntensity * 3);
+        soundManager.play('land');
       }
 
       if (inputRef.current.jumpPressed && (controller.state.isGrounded || controller.isOnWall)) {
@@ -185,6 +190,7 @@ export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitB
           controller.state.position.x + playerDims.WIDTH / 2,
           controller.state.position.y + playerDims.HEIGHT
         );
+        soundManager.play('jump');
       }
 
       if (controller.isDashing) {
@@ -193,6 +199,11 @@ export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitB
           controller.state.position.y + playerDims.HEIGHT / 2,
           controller.dashDirection
         );
+      }
+
+      // Play dash sound on dash start (check if we just started dashing)
+      if (inputRef.current.dashPressed && controller.isDashing) {
+        soundManager.play('dash');
       }
 
       // Clear one-frame inputs
@@ -206,6 +217,7 @@ export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitB
           controller.state.position.y + playerDims.HEIGHT / 2
         );
         screenShake.trigger(10);
+        soundManager.play('death');
         setGameState('dead');
         setDeathCount(c => c + 1);
         setTimeout(() => {
@@ -215,6 +227,7 @@ export function GameCanvas({ level, onExit, onComplete, onNextLevel, hint, exitB
       }
 
       if (result.reachedGoal) {
+        soundManager.play('goal');
         setGameState('won');
         onComplete?.();
       }
